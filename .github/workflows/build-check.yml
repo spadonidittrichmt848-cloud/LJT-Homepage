@@ -31,3 +31,33 @@ jobs:
         run: bundle exec jekyll build --baseurl "/LJT-Homepage"
         env:
           JEKYLL_ENV: production
+      - name: Inspect generated site
+        run: |
+          echo "===== _site top level ====="
+          ls _site
+          echo "===== generated publication pages ====="
+          ls _site/publication
+          echo "===== count of publication entries on /publications/ ====="
+          grep -o 'archive__item-title' _site/publications/index.html | wc -l
+          echo "===== category headings on /publications/ ====="
+          grep -o '<h2>[^<]*</h2>' _site/publications/index.html
+          echo "===== publication titles on /publications/ ====="
+          grep -o 'rel="permalink">[^<]*' _site/publications/index.html
+          echo "===== publication titles on about page (/) ====="
+          grep -o '<strong>[^<]*</strong>' _site/index.html
+          echo "===== sidebar contact links on about page ====="
+          grep -o 'mailto:[^"]*' _site/index.html
+          grep -o 'github.com/Vicent0205' _site/index.html | head -1
+          grep -o 'twitter.com/junteng88716710' _site/index.html | head -1
+          echo "===== nav links ====="
+          grep -o 'href="/LJT-Homepage/[a-z/-]*" class=""' _site/index.html | head -10
+          grep -o '/LJT-Homepage/publications/' _site/index.html | head -2
+          grep -o '/LJT-Homepage/cv/' _site/index.html | head -2
+          echo "===== CV page publication count ====="
+          grep -o 'archive__item-title' _site/cv/index.html | wc -l
+          echo "===== leftover demo content check (expect no matches) ====="
+          grep -rl 'GitHub University' _site || echo "none: GitHub University"
+          grep -rl 'Paper Title Number' _site || echo "none: Paper Title Number"
+          grep -rl 'Your Name' _site || echo "none: Your Name"
+          grep -rl 'minimal-mistakes' _site/_pages 2>/dev/null || true
+          echo "===== done ====="
